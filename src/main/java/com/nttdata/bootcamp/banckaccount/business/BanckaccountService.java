@@ -13,4 +13,8 @@ public interface BanckaccountService {
   Flux<Banckaccount> findAll();
 
   Mono<Banckaccount> update(Banckaccount banckaccount);
+
+  Mono<Banckaccount> change(Banckaccount banckaccount);
+
+  Mono<Banckaccount> delete(String id);
 }
