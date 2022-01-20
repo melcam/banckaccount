@@ -4,7 +4,10 @@ import com.nttdata.bootcamp.banckaccount.business.BanckaccountService;
 import com.nttdata.bootcamp.banckaccount.model.Banckaccount;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @Slf4j
-public class BackaccountController {
+public class BanckaccountController {
 
     @Autowired
     private BanckaccountService banckaccountService;
@@ -42,5 +45,18 @@ public class BackaccountController {
     public Mono<Banckaccount> update(@RequestBody Banckaccount banckaccount) {
         log.info("update>>>>>>>");
         return banckaccountService.update(banckaccount);
+    }
+    @PatchMapping("/api/banckaccounts")
+    public Mono<ResponseEntity<Banckaccount>> change(@RequestBody Banckaccount banckaccount) {
+        log.info("<--change-->");
+        return banckaccountService.change(banckaccount).flatMap(ctUpdate -> Mono.just(ResponseEntity.ok(ctUpdate)))
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+    }
+
+    @DeleteMapping("/api/banckaccounts/{id}")
+    public Mono<ResponseEntity<Banckaccount>> delete(@PathVariable("id") String id) {
+        log.info("<--delete-->");
+        return banckaccountService.delete(id).flatMap(ct -> Mono.just(ResponseEntity.ok(ct)))
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 }

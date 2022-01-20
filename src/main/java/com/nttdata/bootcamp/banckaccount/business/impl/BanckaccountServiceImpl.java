@@ -34,4 +34,17 @@ public class BanckaccountServiceImpl implements BanckaccountService {
     return banckaccountRepository.findById(banckaccount.getId()).map(ba -> banckaccount)
         .flatMap(this.banckaccountRepository::save);
   }
+
+  @Override
+  public Mono<Banckaccount> change(Banckaccount banckaccount) {
+    return banckaccountRepository.findById(banckaccount.getId()).flatMap(ba -> {
+      return create(banckaccount);
+    }).switchIfEmpty(Mono.empty());
+  }
+
+  @Override
+  public Mono<Banckaccount> delete(String id) {
+    return banckaccountRepository.findById(id)
+        .flatMap(ba -> banckaccountRepository.deleteById(ba.getId()).thenReturn(ba));
+  }
 }
